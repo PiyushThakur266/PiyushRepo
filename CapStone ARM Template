@@ -1,0 +1,763 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "connections_twitter_name": {
+            "defaultValue": "twitter",
+            "type": "String"
+        },
+        "connections_office365_name": {
+            "defaultValue": "office365",
+            "type": "String"
+        },
+        "connections_twitter_1_name": {
+            "defaultValue": "twitter-1",
+            "type": "String"
+        },
+        "connections_twitter_2_name": {
+            "defaultValue": "twitter-2",
+            "type": "String"
+        },
+        "sites_ThakurSetimentAPI_name": {
+            "defaultValue": "ThakurSetimentAPI",
+            "type": "String"
+        },
+        "workflows_ThakurSentimentLogic_name": {
+            "defaultValue": "ThakurSentimentLogic",
+            "type": "String"
+        },
+        "serverfarms_ASP_NewCapStoneProject_b382_name": {
+            "defaultValue": "ASP-NewCapStoneProject-b382",
+            "type": "String"
+        },
+        "storageAccounts_newcapstoneproject9733_name": {
+            "defaultValue": "newcapstoneproject9733",
+            "type": "String"
+        },
+        "connections_cognitiveservicestextanalytics_name": {
+            "defaultValue": "cognitiveservicestextanalytics",
+            "type": "String"
+        },
+        "accounts_ThakurSentimentAnalysis_name": {
+            "defaultValue": "ThakurSentimentAnalysis",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2022-03-01",
+            "name": "[parameters('accounts_ThakurSentimentAnalysis_name')]",
+            "location": "eastus",
+            "sku": {
+                "name": "S"
+            },
+            "kind": "TextAnalytics",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "apiProperties": {},
+                "customSubDomainName": "thakursentimentanalysis",
+                "networkAcls": {
+                    "defaultAction": "Allow",
+                    "virtualNetworkRules": [],
+                    "ipRules": []
+                },
+                "publicNetworkAccess": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-09-01",
+            "name": "[parameters('storageAccounts_newcapstoneproject9733_name')]",
+            "location": "eastus",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "kind": "Storage",
+            "properties": {
+                "minimumTlsVersion": "TLS1_2",
+                "allowBlobPublicAccess": true,
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('connections_cognitiveservicestextanalytics_name')]",
+            "location": "eastus",
+            "kind": "V1",
+            "properties": {
+                "displayName": "ThakurAnalyticsConnection",
+                "statuses": [
+                    {
+                        "status": "Connected"
+                    }
+                ],
+                "customParameterValues": {},
+                "createdTime": "2022-08-05T04:42:26.7466632Z",
+                "changedTime": "2022-08-05T04:42:26.7466632Z",
+                "api": {
+                    "name": "[parameters('connections_cognitiveservicestextanalytics_name')]",
+                    "displayName": "Azure Cognitive Service for Language",
+                    "description": "Azure Cognitive Service for Language, previously known as 'Text Analytics' connector detects language, sentiment and more of the text you provide.",
+                    "iconUri": "[concat('https://connectoricons-prod.azureedge.net/releases/v1.0.1584/1.0.1584.2880/', parameters('connections_cognitiveservicestextanalytics_name'), '/icon.png')]",
+                    "brandColor": "#1267AE",
+                    "id": "[concat('/subscriptions/a76097b5-9af5-406a-84ad-c645ae83d01f/providers/Microsoft.Web/locations/eastus/managedApis/', parameters('connections_cognitiveservicestextanalytics_name'))]",
+                    "type": "Microsoft.Web/locations/managedApis"
+                },
+                "testLinks": []
+            }
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('connections_office365_name')]",
+            "location": "eastus",
+            "kind": "V1",
+            "properties": {
+                "displayName": "c0814266@mylambton.ca",
+                "statuses": [
+                    {
+                        "status": "Connected"
+                    }
+                ],
+                "customParameterValues": {},
+                "nonSecretParameterValues": {},
+                "createdTime": "2022-08-06T17:44:24.8915397Z",
+                "changedTime": "2022-08-06T19:03:12.0866689Z",
+                "api": {
+                    "name": "[parameters('connections_office365_name')]",
+                    "displayName": "Office 365 Outlook",
+                    "description": "Microsoft Office 365 is a cloud-based service that is designed to help meet your organization's needs for robust security, reliability, and user productivity.",
+                    "iconUri": "[concat('https://connectoricons-prod.azureedge.net/releases/v1.0.1588/1.0.1588.2938/', parameters('connections_office365_name'), '/icon.png')]",
+                    "brandColor": "#0078D4",
+                    "id": "[concat('/subscriptions/a76097b5-9af5-406a-84ad-c645ae83d01f/providers/Microsoft.Web/locations/eastus/managedApis/', parameters('connections_office365_name'))]",
+                    "type": "Microsoft.Web/locations/managedApis"
+                },
+                "testLinks": [
+                    {
+                        "requestUri": "[concat('https://management.azure.com:443/subscriptions/a76097b5-9af5-406a-84ad-c645ae83d01f/resourceGroups/NewCapStoneProject/providers/Microsoft.Web/connections/', parameters('connections_office365_name'), '/extensions/proxy/testconnection?api-version=2016-06-01')]",
+                        "method": "get"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('connections_twitter_name')]",
+            "location": "eastus",
+            "kind": "V1",
+            "properties": {
+                "displayName": "ThakurTwitterConnection",
+                "statuses": [
+                    {
+                        "status": "Error",
+                        "target": "token",
+                        "error": {}
+                    }
+                ],
+                "customParameterValues": {},
+                "createdTime": "2022-08-05T03:39:34.365227Z",
+                "changedTime": "2022-08-05T03:39:34.365227Z",
+                "api": {
+                    "name": "[parameters('connections_twitter_name')]",
+                    "displayName": "Twitter",
+                    "description": "Twitter is an online social networking service that enables users to send and receive short messages called 'tweets'. Connect to Twitter to manage your tweets. You can perform various actions such as send tweet, search, view followers, etc.",
+                    "iconUri": "[concat('https://connectoricons-prod.azureedge.net/releases/v1.0.1586/1.0.1586.2912/', parameters('connections_twitter_name'), '/icon.png')]",
+                    "brandColor": "#5fa9dd",
+                    "id": "[concat('/subscriptions/a76097b5-9af5-406a-84ad-c645ae83d01f/providers/Microsoft.Web/locations/eastus/managedApis/', parameters('connections_twitter_name'))]",
+                    "type": "Microsoft.Web/locations/managedApis"
+                },
+                "testLinks": []
+            }
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('connections_twitter_1_name')]",
+            "location": "eastus",
+            "kind": "V1",
+            "properties": {
+                "displayName": "ThakurTwitterConnection",
+                "statuses": [
+                    {
+                        "status": "Error",
+                        "target": "token",
+                        "error": {}
+                    }
+                ],
+                "customParameterValues": {},
+                "createdTime": "2022-08-05T04:08:45.5712933Z",
+                "changedTime": "2022-08-05T04:08:45.5712933Z",
+                "api": {
+                    "name": "twitter",
+                    "displayName": "Twitter",
+                    "description": "Twitter is an online social networking service that enables users to send and receive short messages called 'tweets'. Connect to Twitter to manage your tweets. You can perform various actions such as send tweet, search, view followers, etc.",
+                    "iconUri": "https://connectoricons-prod.azureedge.net/releases/v1.0.1586/1.0.1586.2912/twitter/icon.png",
+                    "brandColor": "#5fa9dd",
+                    "id": "/subscriptions/a76097b5-9af5-406a-84ad-c645ae83d01f/providers/Microsoft.Web/locations/eastus/managedApis/twitter",
+                    "type": "Microsoft.Web/locations/managedApis"
+                },
+                "testLinks": []
+            }
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('connections_twitter_2_name')]",
+            "location": "eastus",
+            "kind": "V1",
+            "properties": {
+                "displayName": "ThakurTwitterConnection",
+                "statuses": [
+                    {
+                        "status": "Connected"
+                    }
+                ],
+                "customParameterValues": {},
+                "createdTime": "2022-08-05T04:10:00.5612899Z",
+                "changedTime": "2022-08-05T04:10:09.5963141Z",
+                "api": {
+                    "name": "twitter",
+                    "displayName": "Twitter",
+                    "description": "Twitter is an online social networking service that enables users to send and receive short messages called 'tweets'. Connect to Twitter to manage your tweets. You can perform various actions such as send tweet, search, view followers, etc.",
+                    "iconUri": "https://connectoricons-prod.azureedge.net/releases/v1.0.1586/1.0.1586.2912/twitter/icon.png",
+                    "brandColor": "#5fa9dd",
+                    "id": "/subscriptions/a76097b5-9af5-406a-84ad-c645ae83d01f/providers/Microsoft.Web/locations/eastus/managedApis/twitter",
+                    "type": "Microsoft.Web/locations/managedApis"
+                },
+                "testLinks": []
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2022-03-01",
+            "name": "[parameters('serverfarms_ASP_NewCapStoneProject_b382_name')]",
+            "location": "East US",
+            "sku": {
+                "name": "Y1",
+                "tier": "Dynamic",
+                "size": "Y1",
+                "family": "Y",
+                "capacity": 0
+            },
+            "kind": "functionapp",
+            "properties": {
+                "perSiteScaling": false,
+                "elasticScaleEnabled": false,
+                "maximumElasticWorkerCount": 1,
+                "isSpot": false,
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0,
+                "zoneRedundant": false
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2021-09-01",
+            "name": "[concat(parameters('storageAccounts_newcapstoneproject9733_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_newcapstoneproject9733_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "allowPermanentDelete": false,
+                    "enabled": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices",
+            "apiVersion": "2021-09-01",
+            "name": "[concat(parameters('storageAccounts_newcapstoneproject9733_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_newcapstoneproject9733_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "protocolSettings": {
+                    "smb": {}
+                },
+                "cors": {
+                    "corsRules": []
+                },
+                "shareDeleteRetentionPolicy": {
+                    "enabled": true,
+                    "days": 7
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices",
+            "apiVersion": "2021-09-01",
+            "name": "[concat(parameters('storageAccounts_newcapstoneproject9733_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_newcapstoneproject9733_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices",
+            "apiVersion": "2021-09-01",
+            "name": "[concat(parameters('storageAccounts_newcapstoneproject9733_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_newcapstoneproject9733_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2022-03-01",
+            "name": "[parameters('sites_ThakurSetimentAPI_name')]",
+            "location": "East US",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_ASP_NewCapStoneProject_b382_name'))]"
+            ],
+            "kind": "functionapp",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "thakursetimentapi.azurewebsites.net",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "thakursetimentapi.scm.azurewebsites.net",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_ASP_NewCapStoneProject_b382_name'))]",
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "vnetRouteAllEnabled": false,
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": false,
+                    "http20Enabled": false,
+                    "functionAppScaleLimit": 200,
+                    "minimumElasticInstanceCount": 0
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "customDomainVerificationId": "527602A838A8D8EFB327D36F21C400C634273046B62FD6294386C2CAEE98CD36",
+                "containerSize": 1536,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": true,
+                "redundancyMode": "None",
+                "storageAccountRequired": false,
+                "keyVaultReferenceIdentity": "SystemAssigned"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2022-03-01",
+            "name": "[concat(parameters('sites_ThakurSetimentAPI_name'), '/ftp')]",
+            "location": "East US",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_ThakurSetimentAPI_name'))]"
+            ],
+            "properties": {
+                "allow": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2022-03-01",
+            "name": "[concat(parameters('sites_ThakurSetimentAPI_name'), '/scm')]",
+            "location": "East US",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_ThakurSetimentAPI_name'))]"
+            ],
+            "properties": {
+                "allow": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2022-03-01",
+            "name": "[concat(parameters('sites_ThakurSetimentAPI_name'), '/web')]",
+            "location": "East US",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_ThakurSetimentAPI_name'))]"
+            ],
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php"
+                ],
+                "netFrameworkVersion": "v6.0",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "httpLoggingEnabled": false,
+                "acrUseManagedIdentityCreds": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "$ThakurSetimentAPI",
+                "scmType": "None",
+                "use32BitWorkerProcess": true,
+                "webSocketsEnabled": false,
+                "alwaysOn": false,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": false
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "vnetRouteAllEnabled": false,
+                "vnetPrivatePortsCount": 0,
+                "cors": {
+                    "allowedOrigins": [
+                        "https://portal.azure.com"
+                    ],
+                    "supportCredentials": false
+                },
+                "localMySqlEnabled": false,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": false,
+                "minTlsVersion": "1.2",
+                "scmMinTlsVersion": "1.2",
+                "ftpsState": "FtpsOnly",
+                "preWarmedInstanceCount": 0,
+                "functionAppScaleLimit": 200,
+                "functionsRuntimeScaleMonitoringEnabled": false,
+                "minimumElasticInstanceCount": 0,
+                "azureStorageAccounts": {}
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-03-01",
+            "name": "[concat(parameters('sites_ThakurSetimentAPI_name'), '/ThakurSentimentFunction')]",
+            "location": "East US",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_ThakurSetimentAPI_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://thakursetimentapi.azurewebsites.net/admin/vfs/site/wwwroot/ThakurSentimentFunction/",
+                "script_href": "https://thakursetimentapi.azurewebsites.net/admin/vfs/site/wwwroot/ThakurSentimentFunction/run.csx",
+                "config_href": "https://thakursetimentapi.azurewebsites.net/admin/vfs/site/wwwroot/ThakurSentimentFunction/function.json",
+                "test_data_href": "https://thakursetimentapi.azurewebsites.net/admin/vfs/data/Functions/sampledata/ThakurSentimentFunction.dat",
+                "href": "https://thakursetimentapi.azurewebsites.net/admin/functions/ThakurSentimentFunction",
+                "config": {},
+                "test_data": "{\r\n    \"name\": \"Azure\"\r\n}",
+                "invoke_url_template": "https://thakursetimentapi.azurewebsites.net/api/thakursentimentfunction",
+                "language": "CSharp",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2022-03-01",
+            "name": "[concat(parameters('sites_ThakurSetimentAPI_name'), '/', parameters('sites_ThakurSetimentAPI_name'), '.azurewebsites.net')]",
+            "location": "East US",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_ThakurSetimentAPI_name'))]"
+            ],
+            "properties": {
+                "siteName": "ThakurSetimentAPI",
+                "hostNameType": "Verified"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2021-09-01",
+            "name": "[concat(parameters('storageAccounts_newcapstoneproject9733_name'), '/default/azure-webjobs-hosts')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_newcapstoneproject9733_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_newcapstoneproject9733_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2021-09-01",
+            "name": "[concat(parameters('storageAccounts_newcapstoneproject9733_name'), '/default/azure-webjobs-secrets')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_newcapstoneproject9733_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_newcapstoneproject9733_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+            "apiVersion": "2021-09-01",
+            "name": "[concat(parameters('storageAccounts_newcapstoneproject9733_name'), '/default/thakursetimentapi97e5')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('storageAccounts_newcapstoneproject9733_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_newcapstoneproject9733_name'))]"
+            ],
+            "properties": {
+                "accessTier": "TransactionOptimized",
+                "shareQuota": 5120,
+                "enabledProtocols": "SMB"
+            }
+        },
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[parameters('workflows_ThakurSentimentLogic_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites/functions', parameters('sites_ThakurSetimentAPI_name'), 'ThakurSentimentFunction')]",
+                "[resourceId('Microsoft.Web/connections', parameters('connections_cognitiveservicestextanalytics_name'))]",
+                "[resourceId('Microsoft.Web/connections', parameters('connections_office365_name'))]",
+                "[resourceId('Microsoft.Web/connections', parameters('connections_twitter_2_name'))]"
+            ],
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
+                    "triggers": {
+                        "When_a_new_tweet_is_posted": {
+                            "recurrence": {
+                                "frequency": "Month",
+                                "interval": 1
+                            },
+                            "evaluatedRecurrence": {
+                                "frequency": "Month",
+                                "interval": 1
+                            },
+                            "splitOn": "@triggerBody()?['value']",
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['twitter']['connectionId']"
+                                    }
+                                },
+                                "method": "get",
+                                "path": "/onnewtweet",
+                                "queries": {
+                                    "searchQuery": "#mufc"
+                                }
+                            }
+                        }
+                    },
+                    "actions": {
+                        "For_each": {
+                            "foreach": "@body('Sentiment_(V3.0)')['documents']",
+                            "actions": {
+                                "Condition": {
+                                    "actions": {
+                                        "Send_an_email_(V2)": {
+                                            "runAfter": {},
+                                            "type": "ApiConnection",
+                                            "inputs": {
+                                                "body": {
+                                                    "Body": "<p>@{triggerBody()?['TweetText']}</p>",
+                                                    "Importance": "Normal",
+                                                    "Subject": "@{body('ThakurSentimentFunction')} Tweet from: @{triggerBody()?['UserDetails']?['UserName']}",
+                                                    "To": "piyush4566@gmail.com"
+                                                },
+                                                "host": {
+                                                    "connection": {
+                                                        "name": "@parameters('$connections')['office365']['connectionId']"
+                                                    }
+                                                },
+                                                "method": "post",
+                                                "path": "/v2/Mail"
+                                            }
+                                        }
+                                    },
+                                    "runAfter": {
+                                        "ThakurSentimentFunction": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "expression": {
+                                        "or": [
+                                            {
+                                                "equals": [
+                                                    "@body('ThakurSentimentFunction')",
+                                                    "positive"
+                                                ]
+                                            },
+                                            {
+                                                "equals": [
+                                                    "@body('ThakurSentimentFunction')",
+                                                    "negative"
+                                                ]
+                                            },
+                                            {
+                                                "equals": [
+                                                    "@body('ThakurSentimentFunction')",
+                                                    "neutral"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "type": "If"
+                                },
+                                "ThakurSentimentFunction": {
+                                    "runAfter": {},
+                                    "type": "Function",
+                                    "inputs": {
+                                        "body": "@items('For_each')['sentiment']",
+                                        "function": {
+                                            "id": "[resourceId('Microsoft.Web/sites/functions', parameters('sites_ThakurSetimentAPI_name'), 'ThakurSentimentFunction')]"
+                                        }
+                                    }
+                                }
+                            },
+                            "runAfter": {
+                                "Sentiment_(V3.0)": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Foreach"
+                        },
+                        "Sentiment_(V3.0)": {
+                            "runAfter": {},
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "documents": [
+                                        {
+                                            "id": "@triggerBody()?['TweetId']",
+                                            "language": "en",
+                                            "text": "@triggerBody()?['TweetText']"
+                                        }
+                                    ]
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['cognitiveservicestextanalytics']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/text/analytics/v3.0/sentiment"
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "cognitiveservicestextanalytics": {
+                                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('connections_cognitiveservicestextanalytics_name'))]",
+                                "connectionName": "cognitiveservicestextanalytics",
+                                "id": "/subscriptions/a76097b5-9af5-406a-84ad-c645ae83d01f/providers/Microsoft.Web/locations/eastus/managedApis/cognitiveservicestextanalytics"
+                            },
+                            "office365": {
+                                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('connections_office365_name'))]",
+                                "connectionName": "office365",
+                                "id": "/subscriptions/a76097b5-9af5-406a-84ad-c645ae83d01f/providers/Microsoft.Web/locations/eastus/managedApis/office365"
+                            },
+                            "twitter": {
+                                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('connections_twitter_2_name'))]",
+                                "connectionName": "twitter-2",
+                                "id": "/subscriptions/a76097b5-9af5-406a-84ad-c645ae83d01f/providers/Microsoft.Web/locations/eastus/managedApis/twitter"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
