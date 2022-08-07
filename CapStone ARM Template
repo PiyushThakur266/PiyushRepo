@@ -18,27 +18,27 @@
             "defaultValue": "twitter-2",
             "type": "String"
         },
-        "sites_ThakurSetimentAPI_name": {
+        "FunctionApp_name": {
             "defaultValue": "ThakurSetimentAPI",
             "type": "String"
         },
-        "workflows_ThakurSentimentLogic_name": {
+        "LogicApp_Name": {
             "defaultValue": "ThakurSentimentLogic",
             "type": "String"
         },
-        "serverfarms_ASP_NewCapStoneProject_b382_name": {
+        "AppServicePlan Name": {
             "defaultValue": "ASP-NewCapStoneProject-b382",
             "type": "String"
         },
-        "storageAccounts_newcapstoneproject9733_name": {
+        "StorageAccount_Name": {
             "defaultValue": "newcapstoneproject9733",
             "type": "String"
         },
-        "connections_cognitiveservicestextanalytics_name": {
+        "API_Conenction_Name": {
             "defaultValue": "cognitiveservicestextanalytics",
             "type": "String"
         },
-        "accounts_ThakurSentimentAnalysis_name": {
+        "CognitiveService_App_name": {
             "defaultValue": "ThakurSentimentAnalysis",
             "type": "String"
         }
